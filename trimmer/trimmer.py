@@ -1,4 +1,8 @@
 import csv
+import argparse
+
+parser = argparse.ArgumentParser(description='Process some integers.')
+parser.add_argument('--filename', '-f', default='Card Collection.csv')
 
 class Card:
     def __init__(self, row):
@@ -14,7 +18,7 @@ class Card:
     def to_row(self):
         return [self.cardname, self.cardq, self.cardid, self.cardrarity, self.cardcondition, self.card_edition, self.cardset, self.cardcode]
 
-def trim_collection(fname = "Card Collection.csv"):
+def trim_collection(fname):
     new_fname = fname[:-4] + "_trimmed.csv"
     cur_card = None
 
@@ -38,4 +42,5 @@ def trim_collection(fname = "Card Collection.csv"):
                 row_num += 1
 
 if __name__ == "__main__":
-    trim_collection()
+    args = parser.parse_args()
+    trim_collection(args.filename)

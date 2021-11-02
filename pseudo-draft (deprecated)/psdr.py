@@ -1,5 +1,9 @@
 from draft_generator import generate_deck_dict_v1, generate_deck_dict_classic, combine_ydks
 import sys
+import argparse
+
+parser = argparse.ArgumentParser(description='Process some integers.')
+parser.add_argument('--filename', '-f', default='Card Collection.csv')
 
 if __name__ == "__main__":
     if len(sys.argv) >= 2:
