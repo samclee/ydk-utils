@@ -1,9 +1,18 @@
 import re
 from pathlib import Path
-from ydk import Ydk
+from datetime import datetime
+from ydk import Ydk, file_to_ydk
+import pdb
 
 single_cmd_regex = '^([a-zA-Z]*)$'
 arg_cmd_regex = '^([a-zA-Z]*) (.*)$'
+
+def _get_new_fname():
+  new_fname = f'{str(datetime.now())}.ydk'
+  new_fname = new_fname.replace(' ', '_')
+  new_fname = new_fname.replace(':', '_')
+  new_fname = new_fname.replace('.', '_', 1)
+  return new_fname
 
 def info(args: str):
   pack_name = args.split()[0]
@@ -19,15 +28,38 @@ def merge(args: str):
   base = Ydk([], [], [])
   pack_names = args.split()
   for pack_name in pack_names:
-    pass
+    pack_path: Path = Path(f'./packs/{pack_name}/{pack_name}.ydk')
+    try:
+      new_ydk: Ydk = file_to_ydk(pack_path)
+      base = base + new_ydk
+    except Exception as e:
+      print(f'Error converting [{pack_name}] to object')
+      print(e)
 
-  new_name = 'asd.ydk'
-  with open(new_name, 'w+'):
-    pass
+  new_name = _get_new_fname()
+  new_path = Path('./decks/')
+  new_path = new_path / new_name
+  with open(new_path, 'w+') as f:
+    main_list, extra_list, side_list = base.get_lists()
+    
+    # write main
+    f.write('#created by ...\n#main\n')
+    for main_card in main_list:
+      f.write(f'{main_card}\n')
+
+    # write extra
+    f.write('#extra\n')
+    for extra_card in extra_list:
+      f.write(f'{extra_card}\n')
+
+    # write side
+    f.write('!side\n')
+    for side_card in side_list:
+      f.write(f'{side_card}\n')
 
 if __name__ == "__main__":
   while True:
-    input_cmd = input('>>>')
+    input_cmd = input('>>> ')
     if matches := re.findall(single_cmd_regex, input_cmd):
       if matches[0] == 'quit' or matches[0] == 'exit':
         break
@@ -37,6 +69,8 @@ if __name__ == "__main__":
       arg_str = matches[1]
       if cmd_name == 'info':
         info(arg_str)
+      elif cmd_name == 'merge':
+        merge(arg_str)
     else:
       print(f'>>> [{input_cmd}] unrecognized')
 

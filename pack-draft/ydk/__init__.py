@@ -1,1 +1,1 @@
-from .ydk import Ydk
+from .ydk import Ydk, file_to_ydk
