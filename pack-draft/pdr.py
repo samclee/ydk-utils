@@ -9,9 +9,11 @@ arg_cmd_regex = '^([a-zA-Z]*) (.*)$'
 
 def _get_new_fname():
   new_fname = f'{str(datetime.now())}.ydk'
-  new_fname = new_fname.replace(' ', '_')
-  new_fname = new_fname.replace(':', '_')
-  new_fname = new_fname.replace('.', '_', 1)
+  new_fname = new_fname.replace(' ', '')
+  new_fname = new_fname.replace(':', '')
+  new_fname = new_fname.replace('-', '')
+  new_fname = new_fname.replace('.', '', 1)
+  new_fname = new_fname[4:]
   return new_fname
 
 def info(args: str):
@@ -28,7 +30,8 @@ def merge(args: str):
   base = Ydk([], [], [])
   pack_names = args.split()
   for pack_name in pack_names:
-    pack_path: Path = Path(f'./packs/{pack_name}/{pack_name}.ydk')
+    print(f'Adding {pack_name}')
+    pack_path: Path = Path(f'./packs/[M] {pack_name}.ydk')
     try:
       new_ydk: Ydk = file_to_ydk(pack_path)
       base = base + new_ydk
@@ -56,6 +59,8 @@ def merge(args: str):
     f.write('!side\n')
     for side_card in side_list:
       f.write(f'{side_card}\n')
+  print(f'Created deck [{new_name}]')
+  print(base)
 
 if __name__ == "__main__":
   while True:

@@ -20,6 +20,9 @@ class Ydk:
             self.extra + other.extra,
             self.side + other.side
         )
+
+    def __str__(self):
+        return f'main: {len(self.main)}\nextra: {len(self.extra)}'
     
     def get_lists(self):
         return (self.main, self.extra, self.side)
