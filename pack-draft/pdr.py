@@ -8,12 +8,14 @@ single_cmd_regex = '^([a-zA-Z]*)$'
 arg_cmd_regex = '^([a-zA-Z]*) (.*)$'
 
 def _get_new_fname():
-  new_fname = f'{str(datetime.now())}.ydk'
-  new_fname = new_fname.replace(' ', '')
-  new_fname = new_fname.replace(':', '')
-  new_fname = new_fname.replace('-', '')
-  new_fname = new_fname.replace('.', '', 1)
-  new_fname = new_fname[4:]
+  now = datetime.now() 
+  mo = now.month
+  day = now.day
+  hour = now.hour
+  min = now.min
+  sec = now.second
+
+  new_fname = f'{mo:02}{day:02}{hour:02}{min:02}{sec:02}.ydk'
   return new_fname
 
 def info(args: str):
@@ -76,6 +78,8 @@ if __name__ == "__main__":
         info(arg_str)
       elif cmd_name == 'merge':
         merge(arg_str)
+      else:
+        print(f'[{cmd_name}] command not found')
     else:
       print(f'>>> [{input_cmd}] unrecognized')
 
